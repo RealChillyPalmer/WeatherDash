@@ -6,10 +6,12 @@ interface Coordinates {
   
 }
 // TODO: Define a class for the Weather object
+class Weather
 
 // TODO: Complete the WeatherService class
 class WeatherService {
   // TODO: Define the baseURL, API key, and city name properties
+  
   // TODO: Create fetchLocationData method
   // private async fetchLocationData(query: string) {}
   // TODO: Create destructureLocationData method
@@ -27,7 +29,18 @@ class WeatherService {
   // TODO: Complete buildForecastArray method
   // private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
   // TODO: Complete getWeatherForCity method
-  // async getWeatherForCity(city: string) {}
+  async getWeatherForCity(city: string) {
+    this.cityName = city;
+    
+    const coordinates = await this.fetchAndDestructureLocationData();
+    const currentWeatherData = await this.fetchWeatherData(coordinates);
+    const currentWeather = this.parseCurrentWeather(currentWeatherData);
+    const forecastData = await this.fetchWeatherData(coordinates);
+    const forecastArray = this.buildForecastArray(currentWeather, forecastData);
+
+    return ( currentWeather, forecastArray );
+
+  }
 }
 
 export default new WeatherService();
