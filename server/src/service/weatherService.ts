@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs/promises';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -60,6 +60,7 @@ class WeatherService {
       return err;
     }
   }
+
   //* TODO: Create destructureLocationData method
   private destructureLocationData(locationData: Coordinates): Coordinates {
     console.log(locationData)
@@ -69,21 +70,23 @@ class WeatherService {
     
     return coordinates
   }
+
   //* TODO: Create buildGeocodeQuery method
   private buildGeocodeQuery(coordinates: Coordinates): string {
     const lat = coordinates.lat;
     const lon = coordinates.lon;
 
-    const geocodeQuery = `${this.baseURL}/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=${this.apiKey}`
+    const geocodeQuery: string = `${this.baseURL}/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=${this.apiKey}`
 
     return geocodeQuery
   }
+
   //* TODO: Create buildWeatherQuery method
   private buildWeatherQuery(coordinates: Coordinates): string {
     const lat = coordinates.lat;
     const lon = coordinates.lon;
 
-    const weatherQuery = `${this.baseURL}/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}`;
+    const weatherQuery: string = `${this.baseURL}/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}`;
 
     return weatherQuery
   }
@@ -114,9 +117,11 @@ class WeatherService {
   }
 
   //* TODO: Complete buildForecastArray method
-  private buildForecastArray(weatherData: any[]) {
+  private buildForecastArray(coordinates: Coordinates, weatherData: any[]) {
     const forecastArray: Weather[] = weatherData.map((forecast: Weather) => {
       const forecastObject = {
+        name: coordinates.name,
+        country: coordinates.country,
         date: forecast.date,
         icon: forecast.icon,
         iconDescription: forecast.iconDescription,
@@ -126,12 +131,14 @@ class WeatherService {
       };
       return forecastObject
     });
+    console.log(forecastArray);
+    
     return forecastArray
   }
 
   // TODO: Complete getWeatherForCity method
   async getWeatherForCity(city: string) {
-    const weatherForCity  = await 
+    return await this.read().then((weather) =>)
   }
 }
 
