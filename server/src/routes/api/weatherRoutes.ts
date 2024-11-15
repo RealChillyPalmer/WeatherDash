@@ -5,42 +5,41 @@ const router = Router();
 
 import HistoryService from '../../service/historyService.js';
 import WeatherService from '../../service/weatherService.js';
-import historyService from '../../service/historyService.js';
 
 
 // TODO: POST Request with city name to retrieve weather data
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
   // TODO: GET weather data from city name
   const { cityName } = req.body;
-  if (req.body) {
-    await WeatherService.getWeatherForCity( cityName)
-      .then((weatherData) => {
-        res.status(200).json(weatherData);
+  console.log('14 City Name', cityName)
+  
+  WeatherService.getWeatherForCity(cityName)
+    .then(response => {
+        res.status(200).json(response);
       })
+      
       .catch(() => {
-        res.status(500).send('Error in finding Forecast')
+        res.status(500).json({ error: 'Error in finding Forecast' })
       });
-  };  
-  //   res.status(200).json(weatherData);
-  // } else {
-  //   res.status(500).send('Error in finding Forecast')
-  // }
+
+      
+  
   // TODO: save city to search history
 
   fs.writeFile('searchHistory.json', JSON.stringify(cityName), function(err) {
     if(err) {
       console.log("Can't find City");
     } else {
-      console.log('City added to History')
+      console.log(`${cityName} added to History`)
     }
   })
-  console.log('37', cityName)
+  console.log('wRoutes: 36', cityName)
 });
 
 // TODO: GET search history
-router.get('/history', async (_req, res) => {
+router.get('/api/history', async (_req, res) => {
   // HistoryService.getCities()
-  //   .then((searchHistory: City[]) => {
+  //   .then((searchHistory) => {
   //     res.status(200).json(searchHistory);
   //   })
   //   .catch((err: string) => {
@@ -63,7 +62,7 @@ router.delete('/history/:id', async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ msg: 'City id is required' });
     }
-    await historyService.removeCity(req.params.id);
+    await HistoryService.removeCity(req.params.id);
     res.json({ success: 'City Removed Succesfully' });
   } catch (err) {
     console.log(err);
